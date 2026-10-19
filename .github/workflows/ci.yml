@@ -13,11 +13,17 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         node: [20, 22, 24]
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-      - run: npm install
+      # test against expo-mcp-bridge's main branch, installed as a packed tarball (a real copy, like npm)
+      - run: git clone --depth 1 https://github.com/Rudrasamadhiya/expo-mcp-bridge ../expo-mcp-bridge
+      - run: cd ../expo-mcp-bridge && npm pack --pack-destination ..
+      - run: npm install --no-save ../expo-mcp-bridge-*.tgz
       - run: npm test
       - run: npm pack --dry-run
