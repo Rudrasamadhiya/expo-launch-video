@@ -46,7 +46,7 @@
   "engines": {
     "node": ">=20"
   },
-  "homepage": "https://github.com/Rudrasamadhiya/expo-launch-video#readme",
+  "homepage": "https://rudrasamadhiya.github.io/expo-agent-kit/docs/video/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Rudrasamadhiya/expo-launch-video.git"

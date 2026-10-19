@@ -3,8 +3,11 @@
 [![npm](https://img.shields.io/npm/v/expo-launch-video)](https://www.npmjs.com/package/expo-launch-video)
 [![CI](https://github.com/Rudrasamadhiya/expo-launch-video/actions/workflows/ci.yml/badge.svg)](https://github.com/Rudrasamadhiya/expo-launch-video/actions/workflows/ci.yml)
 [![license](https://img.shields.io/npm/l/expo-launch-video)](LICENSE)
+[![docs](https://img.shields.io/badge/docs-website-6d5cff)](https://rudrasamadhiya.github.io/expo-agent-kit/docs/video/)
 
 **Your AI agent shoots and edits a launch video of your Expo app — live from your phone.**
+
+📖 **Website & full docs:** [rudrasamadhiya.github.io/expo-agent-kit/docs/video/](https://rudrasamadhiya.github.io/expo-agent-kit/docs/video/)
 
 Ask Claude Code, Antigravity or Cursor *"make a 30 second launch video of my app"*. It records your real app on your phone (page loads, scrolling, taps, panels opening), picks the best takes, writes the captions, and cuts a polished video with motion graphics, break-out pop-outs and sound — then opens a studio where you tweak it by dragging or just **typing what you want**. Export is a real **1080p MP4**, rendered in your browser. No After Effects, no ffmpeg, no screen-recording app.
 
