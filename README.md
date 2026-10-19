@@ -9,7 +9,6 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/expo-launch-video"><img alt="npm version" src="https://img.shields.io/npm/v/expo-launch-video?style=flat-square&labelColor=0b0b0b&color=ff2da8"></a>
-  <a href="https://www.npmjs.com/package/expo-launch-video"><img alt="npm downloads" src="https://img.shields.io/npm/dm/expo-launch-video?style=flat-square&labelColor=0b0b0b&color=d4ff3f"></a>
   <a href="https://github.com/Rudrasamadhiya/expo-launch-video/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/Rudrasamadhiya/expo-launch-video/ci.yml?branch=main&style=flat-square&labelColor=0b0b0b&label=CI"></a>
   <a href="https://www.npmjs.com/package/expo-launch-video"><img alt="node" src="https://img.shields.io/node/v/expo-launch-video?style=flat-square&labelColor=0b0b0b&color=cbb3e8"></a>
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/npm/l/expo-launch-video?style=flat-square&labelColor=0b0b0b&color=e34234"></a>
