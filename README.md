@@ -94,6 +94,21 @@ Run `npx expo-launch-video studio` to reopen a project without an agent.
 
 ---
 
+## 💻 CLI
+```bash
+npx expo-launch-video init      # in your Expo project: .mcp.json ("launch-video" server), both skills, AGENTS.md, .gitignore
+npx expo-launch-video studio    # reopen the studio for ./launch-video without an agent (edit, preview, export)
+npx expo-launch-video           # run the MCP server (your agent starts this from .mcp.json)
+npx expo-launch-video --help
+```
+| Environment variable | Default | What |
+|---|---|---|
+| `EXPO_MCP_PORT` | `8347` | Port the phone connects to (shared with expo-mcp-bridge) |
+| `LAUNCH_VIDEO_PORT` | `8790` | Studio web server (next free port if taken) |
+| `LAUNCH_VIDEO_DIR` | `./launch-video` | Where captures, `project.json` and renders live |
+| `LAUNCH_VIDEO_AI` | on | `off` sends studio prompts to your agent instead of the Claude API |
+| `LAUNCH_VIDEO_MODEL` | `claude-opus-5-5` | Model for direct studio edits (needs Anthropic credentials) |
+
 ## 🧩 What's in the box
 ```text
 server/   MCP server, director (auto-planning), capture/recording, studio server, prompt parser, optional Claude edits

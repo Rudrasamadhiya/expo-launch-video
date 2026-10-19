@@ -2,7 +2,7 @@
   "name": "expo-launch-video",
   "version": "0.1.0",
   "scripts": {
-    "test": "node --test test/*.test.mjs"
+    "test": "node --test test/core.test.mjs test/e2e.test.mjs"
   },
   "keywords": [
     "expo",
