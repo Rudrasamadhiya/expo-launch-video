@@ -1,0 +1,6 @@
+node_modules/
+*.tgz
+launch-video/
+CLAUDE.md
+.claude/
+package-lock.json

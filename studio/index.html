@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Launch Video Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="/studio/studio.css">
+</head>
+<body>
+<header class="bar">
+  <div class="brand"><span class="logo">▶</span> Launch Video Studio <span id="appName" class="muted"></span></div>
+  <div class="seg" id="formatSeg" role="group" aria-label="Video format">
+    <button data-format="landscape" title="16:9 for YouTube, Play Store, websites">16:9</button>
+    <button data-format="portrait" title="9:16 for Reels, Shorts, TikTok">9:16</button>
+    <button data-format="square" title="1:1 for feeds">1:1</button>
+  </div>
+  <div class="spacer"></div>
+  <span id="clock" class="clock">0:00.0 / 0:00.0</span>
+  <button id="playBtn" class="btn" aria-label="Play">▶ Play</button>
+  <button id="exportBtn" class="btn primary">Export MP4</button>
+</header>
+
+<main class="layout">
+  <section class="stage">
+    <div class="canvas-wrap" id="canvasWrap"><canvas id="preview" aria-label="Video preview"></canvas>
+      <div class="empty" id="empty" hidden>
+        <h2>No scenes yet</h2>
+        <p>Ask your AI agent: <code>make a 30 second launch video of my app</code><br>It captures the screens with <code>video_capture</code> and plans the video with <code>video_plan</code>. This page updates live.</p>
+      </div>
+    </div>
+    <input id="scrub" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek">
+  </section>
+
+  <aside class="panel">
+    <div class="tabs" role="tablist">
+      <button role="tab" data-tab="scene" class="active">Scene</button>
+      <button role="tab" data-tab="video">Video</button>
+    </div>
+    <div class="tabbody" id="sceneTab"></div>
+    <div class="tabbody" id="videoTab" hidden></div>
+    <div class="chat">
+      <div class="chat-head">Prompt <span class="muted">· type an edit, e.g. “speed up analytics 2x”</span></div>
+      <div class="msgs" id="msgs"></div>
+      <form id="promptForm" class="prompt">
+        <textarea id="promptInput" rows="2" placeholder="Make the dashboard 4s · zoom on Log In in login · portrait · title analytics: Know your weak spots…"></textarea>
+        <button class="btn primary" type="submit">Send</button>
+      </form>
+    </div>
+  </aside>
+</main>
+
+<section class="timeline">
+  <div class="track-wrap" id="trackWrap">
+    <div class="ruler" id="ruler"></div>
+    <div class="track" id="track"></div>
+    <div class="playhead" id="playhead"></div>
+  </div>
+  <div class="captured">
+    <span class="muted">Captured screens not in the video:</span>
+    <div id="unused" class="unused"></div>
+  </div>
+</section>
+
+<dialog id="exportDlg">
+  <h3 id="exportTitle">Rendering…</h3>
+  <progress id="exportProgress" max="1" value="0"></progress>
+  <p id="exportInfo" class="muted"></p>
+  <div class="row"><a id="exportLink" class="btn primary" hidden download>Download</a><button id="exportClose" class="btn">Close</button></div>
+</dialog>
+
+<script type="module" src="/studio/studio.js"></script>
+</body>
+</html>

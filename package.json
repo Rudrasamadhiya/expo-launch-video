@@ -1,0 +1,62 @@
+{
+  "name": "expo-launch-video",
+  "version": "0.1.0",
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "keywords": [
+    "expo",
+    "react-native",
+    "mcp",
+    "launch-video",
+    "promo-video",
+    "app-trailer",
+    "ai",
+    "model-context-protocol",
+    "claude-code",
+    "antigravity",
+    "cursor",
+    "app-store-video",
+    "motion-graphics",
+    "video-editor"
+  ],
+  "author": "Rudra Samadhiya",
+  "license": "MIT",
+  "description": "Let AI agents make animated launch videos of your Expo app: capture screens from the phone, auto-plan timing, zooms and scroll speed-ups, edit in a live studio by prompting, export MP4.",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.135.0",
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "expo-mcp-bridge": "^0.3.0",
+    "mediabunny": "^1.61.6",
+    "zod": "^4.6.7"
+  },
+  "type": "module",
+  "bin": {
+    "expo-launch-video": "server/cli.mjs"
+  },
+  "files": [
+    "server",
+    "studio",
+    "skill",
+    "AI_SETUP.md",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "homepage": "https://github.com/Rudrasamadhiya/expo-launch-video#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rudrasamadhiya/expo-launch-video.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Rudrasamadhiya/expo-launch-video/issues"
+  },
+  "devDependencies": {
+    "react": "^19.1.0",
+    "react-test-renderer": "^19.1.0",
+    "ws": "^8.22.0"
+  }
+}
