@@ -1,6 +1,6 @@
 {
   "name": "expo-launch-video",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
     "test": "node --test test/core.test.mjs test/e2e.test.mjs"
   },
@@ -18,7 +18,11 @@
     "cursor",
     "app-store-video",
     "motion-graphics",
-    "video-editor"
+    "video-editor",
+    "mcp-server",
+    "app-preview",
+    "marketing",
+    "expo-mcp-bridge"
   ],
   "author": "Rudra Samadhiya",
   "license": "MIT",
@@ -26,7 +30,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.135.0",
     "@modelcontextprotocol/sdk": "^1.32.1",
-    "expo-mcp-bridge": "^0.3.0",
+    "expo-mcp-bridge": "^0.3.1",
     "mediabunny": "^1.61.6",
     "zod": "^4.6.7"
   },

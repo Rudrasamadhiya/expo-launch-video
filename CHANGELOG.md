@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1
+
+- Docs and package page: new README with banner and clearer sections; homepage now points to the documentation site.
+- Depends on expo-mcp-bridge ^0.3.1.
+- No code changes.
+
 ## 0.1.0
 
 First release.
