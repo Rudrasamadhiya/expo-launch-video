@@ -34,6 +34,7 @@
 - [Quick start](#quick-start)
 - [Features](#features)
 - [How a video gets made](#how-a-video-gets-made)
+- [Common questions](#common-questions)
 - [Tools](#tools)
 - [The studio](#the-studio)
 - [CLI and environment](#cli-and-environment)
@@ -106,6 +107,24 @@ On Windows the MCP config uses `"command": "cmd", "args": ["/c", "npx", "expo-la
 4. Studio   video_studio  →  you drag, trim and type prompts              video_wait_for_prompt / video_reply
 5. Render   video_render  →  launch-video/out/launch-landscape.mp4
 ```
+
+## Common questions
+
+### How do I make an App Store preview video of my Expo app with AI?
+
+Install this package next to expo-mcp-bridge, run `npx expo-launch-video init`, open the app on your phone and ask your agent: *"Make a 30 second App Store preview, portrait."* It records the real app, plans the video and opens a studio; export gives you a 1080p MP4.
+
+### Can Claude Code or Cursor make a promo video of my React Native app?
+
+Yes, any MCP agent can. The agent records page loads, scrolls and taps live from the phone, writes captions from the real content on screen, and adds zooms, pop-outs, motion graphics and sound.
+
+### Do I need a screen recorder or a video editor?
+
+No. Recording happens inside the app through expo-mcp-bridge, editing happens in a browser studio you can drag or prompt (*"speed up analytics 2x"*), and the MP4 is rendered in Chrome or Edge.
+
+### Which formats can it export?
+
+16:9 for YouTube and websites, 9:16 for App Store and Play Store previews, Reels, Shorts and TikTok, and 1:1 for social feeds.
 
 ## Tools
 
