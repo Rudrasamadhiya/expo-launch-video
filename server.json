@@ -1,0 +1,43 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.Rudrasamadhiya/expo-launch-video",
+  "title": "Expo Launch Video",
+  "description": "Record your Expo app on a real phone and edit a 1080p launch video with motion graphics and sound.",
+  "repository": {
+    "url": "https://github.com/Rudrasamadhiya/expo-launch-video",
+    "source": "github"
+  },
+  "websiteUrl": "https://rudrasamadhiya.github.io/expo-agent-kit/docs/video/",
+  "version": "0.1.2",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "expo-launch-video",
+      "version": "0.1.2",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "EXPO_MCP_PORT",
+          "description": "Port the phone connects to (default 8347)",
+          "isRequired": false,
+          "format": "number"
+        },
+        {
+          "name": "LAUNCH_VIDEO_PORT",
+          "description": "Studio web server port (default 8790)",
+          "isRequired": false,
+          "format": "number"
+        },
+        {
+          "name": "ANTHROPIC_API_KEY",
+          "description": "Optional: lets the studio send free-form edits to Claude",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2
+
+- Listed in the official MCP Registry as `io.github.Rudrasamadhiya/expo-launch-video` (adds `mcpName` to package.json and a `server.json`).
+- Depends on expo-mcp-bridge ^0.3.2.
+- No code changes.
+
 ## 0.1.1
 
 - Docs and package page: new README with banner and clearer sections; homepage now points to the documentation site.
