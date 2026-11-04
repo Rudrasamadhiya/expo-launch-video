@@ -3,7 +3,7 @@
 // Everything is drawn from stills: smooth scrolling comes from the tall
 // scroll capture, zooms are camera moves, taps are a finger + ripple.
 
-import { backgroundFX, kineticCaption, callouts, lightSweep, accentWipe, titleCard, popoutProgress, heroPopout, sideShift, sidePopout, clamp01 as c01 } from './motion.js';
+import { backgroundFX, kineticCaption, callouts, lightSweep, accentWipe, titleCard, popoutProgress, heroPopout, sideShift, sidePopout, clamp01 as c01, isLightTheme } from './motion.js';
 
 export const TRANSITION = 0.45;
 export const FORMATS = { landscape: [1920, 1080], portrait: [1080, 1920], square: [1080, 1080] };
@@ -79,7 +79,7 @@ export async function loadImages(data, base = '/assets/', cache = new Map()) {
 
 // ---- layout ----------------------------------------------------------------
 
-function layout(data, W, H) {
+function layout(data, W, H, sideOverride) {
   const fmt = data.settings.format || 'landscape';
   const anyAsset = Object.values(data.assets)[0];
   const aspect = anyAsset ? anyAsset.dpW / anyAsset.dpH : 9 / 19.5;
@@ -93,7 +93,7 @@ function layout(data, W, H) {
     caption = { x: W / 2, y: H * 0.06, w: W * 0.86, align: 'center', title: 54 * unit, sub: 28 * unit };
   } else {
     // captionSide: text on the left (phone right) or on the right (phone left)
-    const right = data.settings.captionSide === 'right';
+    const right = (sideOverride || data.settings.captionSide) === 'right';
     phoneH = H * 0.86; cx = W * (right ? 0.32 : 0.68); cy = H / 2;
     caption = { x: W * (right ? 0.54 : 0.08), y: H * 0.36, w: W * 0.38, align: 'left', title: 70 * unit, sub: 32 * unit };
   }
@@ -103,7 +103,14 @@ function layout(data, W, H) {
   const phoneW = screenW + bezel * 2;
   const phone = { x: cx - phoneW / 2, y: cy - phoneH / 2, w: phoneW, h: phoneH, r: phoneW * 0.13 };
   const screen = { x: phone.x + bezel, y: phone.y + bezel, w: screenW, h: screenH, r: phone.r - bezel };
-  return { fmt, unit, phone, screen, caption, center: { x: cx, y: cy }, captionSide: fmt === 'landscape' && data.settings.captionSide === 'right' ? 'right' : 'left' };
+  return { fmt, unit, phone, screen, caption, center: { x: cx, y: cy }, captionSide: fmt === 'landscape' && (sideOverride || data.settings.captionSide) === 'right' ? 'right' : 'left' };
+}
+
+/** Blend two layouts (the phone gliding from one side of the frame to the other). */
+function blendLayout(a, b, k) {
+  const mix = (x, y) => x + (y - x) * k;
+  const box = (p, q) => Object.fromEntries(Object.keys(q).map((key) => [key, typeof q[key] === 'number' ? mix(p[key], q[key]) : q[key]]));
+  return { ...b, phone: box(a.phone, b.phone), screen: box(a.screen, b.screen), center: box(a.center, b.center), caption: box(a.caption, b.caption) };
 }
 
 function roundRect(ctx, x, y, w, h, r) {
@@ -128,8 +135,12 @@ function drawBackground(ctx, data, W, H, t) {
     const y = (by + 0.05 * Math.cos(t * 0.28 + ph)) * H;
     const r = br * Math.max(W, H);
     const rg = ctx.createRadialGradient(x, y, 0, x, y, r);
-    rg.addColorStop(0, hexA(th.accent || c1, 0.32));
-    rg.addColorStop(1, hexA(th.accent || c1, 0));
+    // light themes: warm white highlights (an accent wash would grey a pale background)
+    const lightBg = isLightTheme(th);
+    const blobC = lightBg ? (ph === 2.1 ? (th.accent || c1) : '#ffffff') : (th.accent || c1);
+    const blobA = lightBg ? (ph === 2.1 ? 0.07 : 0.6) : 0.32;
+    rg.addColorStop(0, hexA(blobC, blobA));
+    rg.addColorStop(1, hexA(blobC, 0));
     ctx.fillStyle = rg;
     ctx.fillRect(0, 0, W, H);
   }
@@ -319,8 +330,16 @@ export function drawFrame(ctx, data, images, t, W, H, tl = computeTimeline(data)
   if (ci < 0) ci = t < items[0].start ? 0 : items.length - 1;
   const cur = items[ci];
   const prev = ci > 0 && t < items[ci - 1].end ? items[ci - 1] : null;
-  const L = layout(data, W, H);
+  const sideOf = (it) => (it && it.scene.side) || data.settings.captionSide;
+  const Lc = layout(data, W, H, sideOf(cur));
+  const Lp = prev ? layout(data, W, H, sideOf(prev)) : Lc;
+  Lc.canvasW = W; Lp.canvasW = W;
+  const travels = !!prev && prev.scene.kind === 'screen' && cur.scene.kind === 'screen' && Lc.fmt === 'landscape' && sideOf(prev) !== sideOf(cur);
+  const travelK = travels ? easeInOut(clamp01((t - cur.start) / (TRANSITION * 1.7))) : 1;
+  const L = travels ? blendLayout(Lp, Lc, travelK) : Lc;
   L.canvasW = W;
+  const travelMid = travels ? Math.sin(Math.PI * travelK) : 0;
+  const travelDir = travels ? (Lc.center.x > Lp.center.x ? 1 : -1) : 0;
   const u = clamp01((t - cur.start) / cur.shown);
   const tIn = t - cur.start;
   const q = prev ? easeInOut(clamp01((t - cur.start) / TRANSITION)) : 1;
@@ -349,7 +368,8 @@ export function drawFrame(ctx, data, images, t, W, H, tl = computeTimeline(data)
     ctx.save();
     ctx.globalAlpha = alpha;
     ctx.translate(L.center.x + shiftX, L.center.y + dy);
-    ctx.rotate(tilt);
+    ctx.rotate(tilt + travelDir * 0.06 * travelMid);
+    if (travelMid) ctx.scale(1 - 0.08 * travelMid, 1 - 0.08 * travelMid);
     ctx.translate(-L.center.x, -L.center.y);
     const camScene = isScreen(cur) ? cur : prev;
     applyCamera(ctx, data, camScene.scene, isScreen(cur) ? u : 1, L);
@@ -368,17 +388,17 @@ export function drawFrame(ctx, data, images, t, W, H, tl = computeTimeline(data)
   if (prev && cur.scene.transition === 'zoom') accentWipe(ctx, data, W, H, clamp01((t - cur.start) / (TRANSITION * 1.4)));
 
   // pop-up callouts beside the phone
-  if (prev && isScreen(prev)) callouts(ctx, data, L, prev.scene.callouts, { tIn: t - prev.start, alpha: 1 - q, t });
-  if (isScreen(cur)) callouts(ctx, data, L, cur.scene.callouts, { tIn, alpha: fadeOut(cur) * (1 - sideK) * (1 - heroK), t });
+  if (prev && isScreen(prev)) callouts(ctx, data, Lp, prev.scene.callouts, { tIn: t - prev.start, alpha: 1 - q, t });
+  if (isScreen(cur)) callouts(ctx, data, Lc, cur.scene.callouts, { tIn, alpha: fadeOut(cur) * (1 - sideK) * (1 - heroK), t });
 
   // captions (kinetic) and title cards (intro/outro)
   if (prev) {
-    if (isScreen(prev)) kineticCaption(ctx, data, L, prev.scene.caption, { tIn: t - prev.start, alpha: 1 - q, index: screenNo(prev), exit: q });
+    if (isScreen(prev)) kineticCaption(ctx, data, Lp, prev.scene.caption, { tIn: t - prev.start, alpha: 1 - q, index: screenNo(prev), exit: q });
     else titleCard(ctx, data, images, prev.scene, { tIn: t - prev.start, W, H, L, alpha: 1 - q });
   }
   if (isScreen(cur)) {
     const zoomDim = cur.scene.focus && L.fmt === 'landscape' ? 1 - 0.25 * zoomAmount(cur.scene, data.assets[cur.scene.asset], u) : 1;
-    kineticCaption(ctx, data, L, cur.scene.caption, { tIn: prev ? tIn - TRANSITION * 0.3 : tIn, alpha: fadeOut(cur) * zoomDim * (1 - sideK), index: screenNo(cur) });
+    kineticCaption(ctx, data, Lc, cur.scene.caption, { tIn: prev ? tIn - (travels ? TRANSITION * 0.55 : TRANSITION * 0.3) : tIn, alpha: fadeOut(cur) * zoomDim * (1 - sideK), index: screenNo(cur) });
   } else {
     titleCard(ctx, data, images, cur.scene, { tIn, W, H, L, alpha: prev ? q : 1 });
   }

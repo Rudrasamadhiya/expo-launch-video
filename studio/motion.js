@@ -23,6 +23,15 @@ export function roundRect(ctx, x, y, w, h, r) {
   ctx.roundRect ? ctx.roundRect(x, y, w, h, Math.max(0, r)) : ctx.rect(x, y, w, h);
 }
 
+/** Light themes (pale backgrounds) get dark, warm ink instead of white overlays. */
+export function isLightTheme(th) {
+  const h = String((th && th.bg && th.bg[0]) || '#000').replace('#', '');
+  if (h.length < 6) return false;
+  const [r, g, b] = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16) / 255);
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.6;
+}
+export function ink(th, a) { return isLightTheme(th) ? hexA((th && th.text) || '#26302A', a) : `rgba(255,255,255,${a})`; }
+
 // deterministic pseudo-random numbers (same every frame/export)
 function rand(i) {
   const x = Math.sin(i * 127.1 + 311.7) * 43758.5453;
@@ -38,7 +47,7 @@ export function backgroundFX(ctx, data, W, H, t) {
   const u = Math.min(W, H) / 1080;
   // parallax dot grid
   ctx.save();
-  ctx.fillStyle = 'rgba(255,255,255,0.06)';
+  ctx.fillStyle = ink(th, 0.06);
   const gap = 46 * u;
   const ox = (t * 6 * u) % gap;
   const oy = (t * 3 * u) % gap;
@@ -55,7 +64,7 @@ export function backgroundFX(ctx, data, W, H, t) {
   ctx.translate(W * 0.82, H * 0.18);
   ctx.rotate(t * 0.08);
   for (let i = 0; i < 4; i++) {
-    ctx.strokeStyle = `rgba(255,255,255,${0.07 - i * 0.012})`;
+    ctx.strokeStyle = ink(th, 0.07 - i * 0.012);
     ctx.lineWidth = 2 * u;
     ctx.setLineDash([18 * u, 14 * u + i * 6 * u]);
     ctx.beginPath();
@@ -68,14 +77,14 @@ export function backgroundFX(ctx, data, W, H, t) {
   const y = H * (0.75 + 0.06 * Math.cos(t * 0.17));
   const r = 420 * u;
   const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-  g.addColorStop(0, hexA(accent, 0.28));
+  g.addColorStop(0, hexA(accent, isLightTheme(th) ? 0.13 : 0.28));
   g.addColorStop(1, hexA(accent, 0));
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, W, H);
   // vignette for depth
   const v = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.35, W / 2, H / 2, Math.max(W, H) * 0.75);
   v.addColorStop(0, 'rgba(0,0,0,0)');
-  v.addColorStop(1, 'rgba(0,0,0,0.35)');
+  v.addColorStop(1, isLightTheme(th) ? 'rgba(110,86,40,0.14)' : 'rgba(0,0,0,0.35)');
   ctx.fillStyle = v;
   ctx.fillRect(0, 0, W, H);
 }
@@ -124,12 +133,12 @@ export function kineticCaption(ctx, data, L, caption, { tIn, alpha = 1, index = 
     ctx.translate(x + w / 2, y + h / 2);
     ctx.scale(Math.max(0.01, k), Math.max(0.01, k));
     roundRect(ctx, -w / 2, -h / 2, w, h, h / 2);
-    ctx.fillStyle = 'rgba(255,255,255,0.16)';
+    ctx.fillStyle = ink(th, 0.1);
     ctx.fill();
-    ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+    ctx.strokeStyle = ink(th, 0.3);
     ctx.lineWidth = 1.5 * u;
     ctx.stroke();
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = isLightTheme(th) ? (th.text || '#26302A') : '#fff';
     ctx.textAlign = 'center';
     ctx.fillText(label, 0, -h / 2 + 8 * u);
     ctx.restore();
@@ -179,7 +188,7 @@ export function kineticCaption(ctx, data, L, caption, { tIn, alpha = 1, index = 
     ctx.font = `500 ${c.sub}px ${FONT}`;
     const k = easeOut((tIn - 0.45 - wordIndex * 0.04) / 0.6);
     ctx.globalAlpha = alpha * k;
-    ctx.fillStyle = 'rgba(255,255,255,0.82)';
+    ctx.fillStyle = ink(th, 0.78);
     ctx.textAlign = c.align;
     for (const words of wrapWords(ctx, caption.subtitle, c.w, 3)) {
       ctx.fillText(words.join(' '), c.x, y + (1 - k) * 24 * u);
@@ -370,7 +379,7 @@ export function titleCard(ctx, data, images, scene, { tIn, W, H, L, alpha }) {
     words.forEach((w, i) => {
       const k = easeOut((tIn - 0.95 - i * 0.08) / 0.5);
       ctx.globalAlpha = alpha * k;
-      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      ctx.fillStyle = ink(th, 0.8);
       ctx.fillText(w, x, y + (1 - k) * 26 * u);
       x += ctx.measureText(w + ' ').width;
     });
@@ -385,10 +394,10 @@ export function titleCard(ctx, data, images, scene, { tIn, W, H, L, alpha }) {
     ctx.save();
     ctx.translate(cx, y + h / 2);
     ctx.scale(Math.max(0.01, k) * pulse, Math.max(0.01, k) * pulse);
-    ctx.shadowColor = hexA('#ffffff', 0.55);
+    ctx.shadowColor = isLightTheme(th) ? hexA(th.accent || '#4f46e5', 0.35) : hexA('#ffffff', 0.55);
     ctx.shadowBlur = (30 + 20 * Math.sin(tIn * 5)) * u;
     roundRect(ctx, -w / 2, -h / 2, w, h, h / 2);
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = isLightTheme(th) ? (th.accent || '#4f46e5') : '#ffffff';
     ctx.fill();
     ctx.shadowColor = 'transparent';
     ctx.save();
@@ -401,7 +410,7 @@ export function titleCard(ctx, data, images, scene, { tIn, W, H, L, alpha }) {
     ctx.fillStyle = g;
     ctx.fillRect(-w / 2, -h / 2, w, h);
     ctx.restore();
-    ctx.fillStyle = th.accent || '#4f46e5';
+    ctx.fillStyle = isLightTheme(th) ? '#ffffff' : (th.accent || '#4f46e5');
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(label, 0, 2 * u);
@@ -410,7 +419,7 @@ export function titleCard(ctx, data, images, scene, { tIn, W, H, L, alpha }) {
     const kk = easeOut((tIn - 0.9) / 0.6);
     ctx.globalAlpha = alpha * kk;
     ctx.textAlign = 'center';
-    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.fillStyle = ink(th, 0.9);
     ctx.font = `700 ${44 * u}px ${FONT}`;
     ctx.fillText(scene.caption?.subtitle || '', cx, y + (1 - kk) * 20 * u);
   }

@@ -92,6 +92,7 @@ On Windows the MCP config uses `"command": "cmd", "args": ["/c", "npx", "expo-la
 - **Real footage from the phone.** Screen recordings at about 10–15 fps captured in-app: page loads and animations on camera, smooth scrolls from full-page captures, taps mid-take.
 - **Auto-directed.** A director plans timing, zooms into stat rows and buttons, speeds up long scrolls, and writes captions and pop-up chips from the real numbers on screen.
 - **Motion graphics.** Kinetic typography, glass callouts, light sweeps, accent wipes, and an animated intro and outro with a logo burst and a pulsing call to action.
+- **The phone moves.** In landscape the phone travels across the frame from scene to scene while the caption sweeps in over it; `video_plan` alternates sides, `video_edit` sets `side:"left"|"right"` per scene.
 - **Break-out pop-outs.** A tapped card lifts off the phone to center stage; a panel that opens springs out into a side-by-side layout.
 - **Sound design.** Synthesized pops, clicks, whooshes and chimes timed to every animation, mixed into an AAC track in the MP4.
 - **Prompt the studio.** *"speed up analytics 2x"*, *"text on the right"*, *"zoom into the Start button"*. Simple edits apply instantly; anything else goes to your agent, which edits the video live.
@@ -103,7 +104,7 @@ On Windows the MCP config uses `"command": "cmd", "args": ["/c", "npx", "expo-la
 1. Shoot    video_record {route:"/dashboard", seconds:8, scroll:true}    live from the phone
             video_record {tap:"My Analytics", seconds:6}                  tap → hero / side pop-out
 2. Plan     video_plan {targetSeconds:45, format:"landscape"}             timing, zooms, captions, chips
-3. Direct   video_edit [{op:"update", scene:"dashboard", title:"…"}]      refine any scene
+3. Direct   video_edit [{op:"update", scene:"dashboard", title:"…", side:"right"}]  refine any scene
 4. Studio   video_studio  →  you drag, trim and type prompts              video_wait_for_prompt / video_reply
 5. Render   video_render  →  launch-video/out/launch-landscape.mp4
 ```

@@ -143,6 +143,7 @@ export class Project extends EventEmitter {
         if (op.duration != null) s.duration = clamp(Number(op.duration), 0.5, 30);
         if (op.speed != null) s.speed = clamp(Number(op.speed), 0.25, 4);
         if (op.transition) s.transition = op.transition;
+        if ('side' in op) s.side = op.side === 'left' || op.side === 'right' ? op.side : null;
         if (op.caption || op.title != null || op.subtitle != null) {
           s.caption = { ...s.caption, ...(op.caption || {}) };
           if (op.title != null) s.caption.title = op.title;
@@ -261,6 +262,7 @@ export function summary(data) {
     if (s.scroll) l += ` · scroll ${Math.round(s.scroll.to * 100)}%`;
     if (s.popouts?.length) l += ` · break-outs: ${s.popouts.map((x) => x.style + (x.label ? ' "' + x.label + '"' : '') + ' @' + x.at.toFixed(1) + 's').join(', ')}`;
     if (s.callouts?.length) l += ` · pop-ups: ${s.callouts.map((x) => x.value ? x.value + ' ' + (x.label || '') : x.text).join(', ')}`;
+    if (s.side && s.kind === 'screen') l += ` · text ${s.side}`;
     if (s.tap) l += ` · tap "${s.tap.label || ''}"`;
     if (s.recording && a?.recording) l += ` · screen recording ${a.recording.seconds}s (${a.recording.action})`;
     lines.push(l);

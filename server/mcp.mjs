@@ -132,7 +132,7 @@ export async function startServer({ root = process.cwd() } = {}) {
   server.registerTool('video_edit', {
     description: [
       'Edit the timeline. ops is a list of:',
-      '{op:"update", scene, duration?, speed?, title?, subtitle?, transition?("slide"|"fade"|"zoom"|"rise"|"none"), focus?(element label | {x,y,w,h} dp | null), zoom?(1-3), zoomTimes?([inStart,inEnd,outStart,outEnd] recording seconds, for recordings), scroll?(0-1 | false), callouts?, popouts?}',
+      '{op:"update", scene, duration?, speed?, title?, subtitle?, transition?("slide"|"fade"|"zoom"|"rise"|"none"), side?("left"|"right": caption side for this scene in landscape; the phone glides across the frame when it changes), focus?(element label | {x,y,w,h} dp | null), zoom?(1-3), zoomTimes?([inStart,inEnd,outStart,outEnd] recording seconds, for recordings), scroll?(0-1 | false), callouts?, popouts?}',
       '{op:"move", scene, to(number|"first"|"last") | before | after} · {op:"remove", scene} · {op:"add", asset, at?} · {op:"drop", asset} (discard a bad capture)',
       '{op:"settings", format?, appName?, tagline?, cta?, captionSide?("left"|"right"), sound?{sfx: bool, volume: 0-1}, theme?{accent, bg:[c1,c2]}} · {op:"plan", targetSeconds?}',
       'scene = id ("s3"), 1-based position, or a screen name/route ("dashboard").',

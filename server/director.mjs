@@ -182,6 +182,9 @@ export function outroScene(settings = {}) {
 /** Full timeline: intro, one scene per captured screen (capture order), outro. */
 export function plan(data, { targetSeconds } = {}) {
   const screens = data.order.map((id) => data.assets[id]).filter(Boolean).map((a) => autoScene(a, data.settings));
+  // landscape: alternate the caption side scene by scene so the phone travels across the frame
+  const base = data.settings.captionSide === 'right' ? 'right' : 'left';
+  screens.forEach((sc, i) => { sc.side = i % 2 === 0 ? base : (base === 'left' ? 'right' : 'left'); });
   screens.forEach((s, i) => { s.transition = i === 0 ? 'rise' : i % 3 === 2 ? 'zoom' : 'slide'; });
   const scenes = [introScene(data.settings), ...screens, outroScene(data.settings)];
   if (targetSeconds) {

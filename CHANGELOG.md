@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.3
+
+- **The phone moves between scenes.** New per-scene `side` (`"left"` / `"right"`, landscape): when it changes, the phone glides across the frame with a slight dip and lean, and the new caption sweeps in over it before settling. `video_plan` alternates sides automatically; set or clear it with `video_edit {op:"update", scene, side}`. The timeline summary shows `text left/right`.
+- **Light themes look right.** Pale backgrounds (e.g. `bg: ["#FAF7E8", "#EADFC0"]`) now get warm white highlights instead of an accent wash, dark ink captions and subtitles (from `theme.text`), a soft warm vignette instead of black, and an accent-filled call-to-action pill.
+
 ## 0.1.2
 
 - Listed in the official MCP Registry as `io.github.Rudrasamadhiya/expo-launch-video` (adds `mcpName` to package.json and a `server.json`).
